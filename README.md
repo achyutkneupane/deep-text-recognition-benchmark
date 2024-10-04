@@ -57,3 +57,33 @@ python create_lmdb_dataset.py train_data train_data/labels.txt train_lmdb
 ```bash
 python create_lmdb_dataset.py val_data val_data/labels.txt val_lmdb
 ```
+
+### Obtaining a pre-trained model
+
+For this step, we use a pretrained model which we can fine-tune on. We can download them from [here](https://drive.google.com/drive/folders/15WPsuPJDCzhp2SvYZLRj8mAlT3zmoAMW).
+
+In this project, I used [TPS-ResNet-BiLSTM-Attn.pth](https://drive.google.com/file/d/1b59rXuGGmKne1AuHnkgDzoYgKeETNMv9/view?usp=sharing) and placed it in `models` folder.
+
+### Note: For CPU
+
+First, make sure you are running it on `GPU`. If you are using `CPU` instead of `GPU`, change the code in `train.yml` in line `83`.
+
+If you are instead using `GPU`, skip the below process:
+
+From:
+
+```python
+if opt.FT:
+    model.load_state_dict(torch.load(opt.saved_model), strict=False)
+else:
+    model.load_state_dict(torch.load(opt.saved_model))
+```
+
+To:
+
+```python
+if opt.FT:
+    model.load_state_dict(torch.load(opt.saved_model, map_location='cpu'), strict=False)
+else:
+    model.load_state_dict(torch.load(opt.saved_model, map_location='cpu'))
+```
