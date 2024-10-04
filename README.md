@@ -4,6 +4,8 @@ This repository contains the code for training Easy OCR model on custom dataset.
 
 ## Installation
 
+Install the required packages using the following command:
+
 ```bash
 pip install -r requirements.txt
 ```
@@ -22,12 +24,6 @@ There are `5500 (91.92%)` images in the training dataset and `483 (8.08%)` image
 
 
 ### Create LMDB dataset
-
-To create the LMDB dataset, run the following command:
-
-```bash
-cd deep-text-recognition-benchmark
-```
 
 Before creating the dataset, update the `create_lmdb_dataset.py` to have below on line `47`:
 
