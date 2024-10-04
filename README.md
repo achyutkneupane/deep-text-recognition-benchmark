@@ -31,6 +31,15 @@ cd deep-text-recognition-benchmark
 
 Before creating the dataset, update the `create_lmdb_dataset.py` to have below on line `47`:
 
+From:
+
+```python
+imagePath, label = datalist[i].strip('\n').split('\t')
+imagePath = os.path.join(inputPath, imagePath)
+```
+
+To:
+
 ```python
 imagePath, label = datalist[i].strip('\n').split('.jpg')
 imagePath += '.jpg'
