@@ -9,6 +9,7 @@
 *.txt
 !requirements.txt
 *.ipynb
+!train.ipynb
 *.zip
 *.eps
 *.pdf
