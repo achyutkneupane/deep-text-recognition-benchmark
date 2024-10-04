@@ -64,26 +64,10 @@ For this step, we use a pretrained model which we can fine-tune on. We can downl
 
 In this project, I used [TPS-ResNet-BiLSTM-Attn.pth](https://drive.google.com/file/d/1b59rXuGGmKne1AuHnkgDzoYgKeETNMv9/view?usp=sharing) and placed it in `models` folder.
 
-### Note: For CPU
+### Train the model
 
-First, make sure you are running it on `GPU`. If you are using `CPU` instead of `GPU`, change the code in `train.yml` in line `83`.
+Now, we can train the model using the following command:
 
-If you are instead using `GPU`, skip the below process:
-
-From:
-
-```python
-if opt.FT:
-    model.load_state_dict(torch.load(opt.saved_model), strict=False)
-else:
-    model.load_state_dict(torch.load(opt.saved_model))
-```
-
-To:
-
-```python
-if opt.FT:
-    model.load_state_dict(torch.load(opt.saved_model, map_location='cpu'), strict=False)
-else:
-    model.load_state_dict(torch.load(opt.saved_model, map_location='cpu'))
+```bash
+python train.py --train_data train_lmdb --valid_data val_lmdb --select_data "/" --batch_ratio 1.0 --Transformation TPS --FeatureExtraction ResNet --SequenceModeling BiLSTM --Prediction Attn --saved_model models/TPS-ResNet-BiLSTM-Attn.pth --data_filtering_off --batch_max_length 80 --workers 0
 ```

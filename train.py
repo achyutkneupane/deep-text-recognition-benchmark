@@ -16,10 +16,16 @@ from utils import CTCLabelConverter, CTCLabelConverterForBaiduWarpctc, AttnLabel
 from dataset import hierarchical_dataset, AlignCollate, Batch_Balanced_Dataset
 from model import Model
 from test import validation
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
+if torch.cuda.is_available():
+    device = torch.device('cuda')
+# elif torch.backends.mps.is_available():
+#     device = torch.device('mps')
+else:
+    device = torch.device('cpu')
 
 
-def train(opt):
+def train(opt):    
     """ dataset preparation """
     if not opt.data_filtering_off:
         print('Filtering the images containing characters which are not in opt.character')
@@ -81,9 +87,9 @@ def train(opt):
     if opt.saved_model != '':
         print(f'loading pretrained model from {opt.saved_model}')
         if opt.FT:
-            model.load_state_dict(torch.load(opt.saved_model), strict=False)
+            model.load_state_dict(torch.load(opt.saved_model, map_location=device), strict=False)
         else:
-            model.load_state_dict(torch.load(opt.saved_model))
+            model.load_state_dict(torch.load(opt.saved_model, map_location=device))
     print("Model:")
     print(model)
 
@@ -258,7 +264,7 @@ if __name__ == '__main__':
     parser.add_argument('--rgb', action='store_true', help='use rgb input')
     parser.add_argument('--character', type=str,
                         default='0123456789abcdefghijklmnopqrstuvwxyz', help='character label')
-    parser.add_argument('--sensitive', action='store_true', help='for sensitive character mode')
+    parser.add_argument('--sensitive', default=False, action='store_true', help='for sensitive character mode')
     parser.add_argument('--PAD', action='store_true', help='whether to keep ratio then pad for image resize')
     parser.add_argument('--data_filtering_off', action='store_true', help='for data_filtering_off mode')
     """ Model Architecture """
@@ -292,12 +298,25 @@ if __name__ == '__main__':
     # print("Random Seed: ", opt.manualSeed)
     random.seed(opt.manualSeed)
     np.random.seed(opt.manualSeed)
-    torch.manual_seed(opt.manualSeed)
-    torch.cuda.manual_seed(opt.manualSeed)
+    
+    if device == 'cuda':
+        torch.cuda.manual_seed(opt.manualSeed)
+        torch.cuda.manual_seed_all(opt.manualSeed)
+    elif device == 'mps':
+        torch.mps.manual_seed(opt.manualSeed)
+    else:
+        torch.manual_seed(opt.manualSeed)
 
     cudnn.benchmark = True
     cudnn.deterministic = True
-    opt.num_gpu = torch.cuda.device_count()
+    
+    if device == 'cuda':
+        opt.num_gpu = torch.cuda.device_count()
+    elif device == 'mps':
+        opt.num_gpu = torch.mps.device_count()
+    else:
+        opt.num_gpu = 0
+    
     # print('device count', opt.num_gpu)
     if opt.num_gpu > 1:
         print('------ Use multi-GPU setting ------')
