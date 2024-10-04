@@ -8,6 +8,7 @@
 *.sh
 *.txt
 !requirements.txt
+!labels.txt
 *.ipynb
 !train.ipynb
 *.zip
