@@ -40,11 +40,11 @@ imagePath = os.path.join(inputPath, imagePath)
 #### For training dataset
 
 ```bash
-python create_lmdb_dataset.py ../train_data ../train_data/labels.txt ../train_lmdb
+python create_lmdb_dataset.py train_data train_data/labels.txt train_lmdb
 ```
 
 #### For validation dataset
 
 ```bash
-python create_lmdb_dataset.py ../val_data ../val_data/labels.txt ../val_lmdb
+python create_lmdb_dataset.py val_data val_data/labels.txt val_lmdb
 ```
