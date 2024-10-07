@@ -18,6 +18,7 @@ from model import Model
 from test import validation
 # from google.colab import drive
 import shutil
+from tqdm import tqdm
 
 if torch.cuda.is_available():
     device = torch.device('cuda')
@@ -159,9 +160,7 @@ def train(opt):
     best_norm_ED = -1
     iteration = start_iter
 
-    while(True):
-        print(f'iteration: {iteration}/{opt.num_iter}\n')
-        # train part
+    for _ in tqdm(range(opt.num_iter)):
         image_tensors, labels = train_dataset.get_batch()
         image = image_tensors.to(device)
         text, length = converter.encode(labels, batch_max_length=opt.batch_max_length)
