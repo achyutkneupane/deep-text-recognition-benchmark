@@ -16,6 +16,8 @@ from utils import CTCLabelConverter, CTCLabelConverterForBaiduWarpctc, AttnLabel
 from dataset import hierarchical_dataset, AlignCollate, Batch_Balanced_Dataset
 from model import Model
 from test import validation
+from google.colab import drive
+import shutil
 
 if torch.cuda.is_available():
     device = torch.device('cuda')
@@ -23,6 +25,15 @@ if torch.cuda.is_available():
 #     device = torch.device('mps')
 else:
     device = torch.device('cpu')
+    
+    
+def upload_to_drive(file,name):
+    if not os.path.isdir('/content/drive/MyDrive'):
+        drive.mount('/content/drive', force_remount=True)
+    if name == None:
+        shutil.copy(file, '/content/drive/MyDrive/Colab Notebooks/Files')
+    else:
+        shutil.copy(file, f'/content/drive/MyDrive/Colab Notebooks/Files/{name}')
 
 
 def train(opt):    
@@ -198,9 +209,15 @@ def train(opt):
                 if current_accuracy > best_accuracy:
                     best_accuracy = current_accuracy
                     torch.save(model.state_dict(), f'./saved_models/{opt.exp_name}/best_accuracy.pth')
+                    
+                    os.makedirs(f'/content/drive/MyDrive/Colab Notebooks/Files/{iteration}', exist_ok=True)
+                    upload_to_drive(f'./saved_models/{opt.exp_name}/best_accuracy.pth', f'{iteration}/best_accuracy.pth')
                 if current_norm_ED > best_norm_ED:
                     best_norm_ED = current_norm_ED
                     torch.save(model.state_dict(), f'./saved_models/{opt.exp_name}/best_norm_ED.pth')
+                    
+                    os.makedirs(f'/content/drive/MyDrive/Colab Notebooks/Files/{iteration}', exist_ok=True)
+                    upload_to_drive(f'./saved_models/{opt.exp_name}/best_norm_ED.pth', f'{iteration}/best_norm_ED.pth')
                 best_model_log = f'{"Best_accuracy":17s}: {best_accuracy:0.3f}, {"Best_norm_ED":17s}: {best_norm_ED:0.2f}'
 
                 loss_model_log = f'{loss_log}\n{current_model_log}\n{best_model_log}'
@@ -220,11 +237,16 @@ def train(opt):
                 predicted_result_log += f'{dashed_line}'
                 print(predicted_result_log)
                 log.write(predicted_result_log + '\n')
+            os.makedirs(f'/content/drive/MyDrive/Colab Notebooks/Files/{iteration}', exist_ok=True)
+            upload_to_drive(f'./saved_models/{opt.exp_name}/log_train.txt', f'{iteration}/log_train.txt')
 
         # save model per 1e+5 iter.
         if (iteration + 1) % 1e+5 == 0:
             torch.save(
                 model.state_dict(), f'./saved_models/{opt.exp_name}/iter_{iteration+1}.pth')
+            
+            os.makedirs(f'/content/drive/MyDrive/Colab Notebooks/Files/{iteration}', exist_ok=True)
+            upload_to_drive(f'./saved_models/{opt.exp_name}/iter_{iteration+1}.pth', f'{iteration}/iter_{iteration+1}.pth')
 
         if (iteration + 1) == opt.num_iter:
             print('end the training')
@@ -263,7 +285,7 @@ if __name__ == '__main__':
     parser.add_argument('--imgW', type=int, default=100, help='the width of the input image')
     parser.add_argument('--rgb', action='store_true', help='use rgb input')
     parser.add_argument('--character', type=str,
-                        default='0123456789abcdefghijklmnopqrstuvwxyz', help='character label')
+                        default='0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz', help='character label')
     parser.add_argument('--sensitive', default=False, action='store_true', help='for sensitive character mode')
     parser.add_argument('--PAD', action='store_true', help='whether to keep ratio then pad for image resize')
     parser.add_argument('--data_filtering_off', action='store_true', help='for data_filtering_off mode')
