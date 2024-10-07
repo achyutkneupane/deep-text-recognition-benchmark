@@ -16,7 +16,7 @@ from utils import CTCLabelConverter, CTCLabelConverterForBaiduWarpctc, AttnLabel
 from dataset import hierarchical_dataset, AlignCollate, Batch_Balanced_Dataset
 from model import Model
 from test import validation
-from google.colab import drive
+# from google.colab import drive
 import shutil
 
 if torch.cuda.is_available():
@@ -160,6 +160,7 @@ def train(opt):
     iteration = start_iter
 
     while(True):
+        print(f'iteration: {iteration}/{opt.num_iter}\n')
         # train part
         image_tensors, labels = train_dataset.get_batch()
         image = image_tensors.to(device)

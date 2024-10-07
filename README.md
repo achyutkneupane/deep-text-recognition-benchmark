@@ -65,5 +65,5 @@ In this project, I used [TPS-ResNet-BiLSTM-Attn.pth](https://drive.google.com/fi
 Now, we can train the model using the following command:
 
 ```bash
-python train.py --train_data train_lmdb --valid_data val_lmdb --select_data "/"-"/" --batch_ratio 5500-483 --Transformation TPS --FeatureExtraction ResNet --SequenceModeling BiLSTM --Prediction Attn --saved_model models/TPS-ResNet-BiLSTM-Attn.pth --batch_size 2 --data_filtering_off --workers 0 --batch_max_length 80 --num_iter 10 --valInterval 5 --FT
+python train.py --train_data train_lmdb --valid_data val_lmdb --select_data "/" --batch_ratio 1.0 --Transformation TPS --FeatureExtraction ResNet --SequenceModeling BiLSTM --Prediction Attn --saved_model models/TPS-ResNet-BiLSTM-Attn.pth --batch_size 8 --data_filtering_off --workers 4 --batch_max_length 80 --num_iter 10 --valInterval 5 --FT
 ```
