@@ -37,7 +37,7 @@ imagePath = os.path.join(inputPath, imagePath)
 To:
 
 ```python
-imagePath, label = datalist[i].strip('\n').split('.jpg')
+imagePath, label = datalist[i].strip('\n').split('.jpg,')
 imagePath += '.jpg'
 imagePath = os.path.join(inputPath, imagePath)
 ```
