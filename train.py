@@ -141,7 +141,7 @@ def train(opt):
         args = vars(opt)
         for k, v in args.items():
             opt_log += f'{str(k)}: {str(v)}\n'
-        otp_log += f'device: {device}\n'
+        opt_log += f'device: {device}\n'
         opt_log += '---------------------------------------\n'
         print(opt_log)
         opt_file.write(opt_log)
