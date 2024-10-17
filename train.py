@@ -240,7 +240,7 @@ def train(opt):
             upload_to_drive(f'./saved_models/{opt.exp_name}/log_train.txt', f'{iteration}/log_train.txt')
 
         # save model per 1e+5 iter.
-        if (iteration + 1) % 1e+5 == 0:
+        if (iteration + 1) % 1e+4 == 0:
             torch.save(
                 model.state_dict(), f'./saved_models/{opt.exp_name}/iter_{iteration+1}.pth')
             
