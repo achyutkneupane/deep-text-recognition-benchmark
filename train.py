@@ -16,7 +16,6 @@ from utils import CTCLabelConverter, CTCLabelConverterForBaiduWarpctc, AttnLabel
 from dataset import hierarchical_dataset, AlignCollate, Batch_Balanced_Dataset
 from model import Model
 from test import validation
-# from google.colab import drive
 import shutil
 from tqdm import tqdm
 
@@ -101,7 +100,7 @@ def train(opt):
         if opt.FT:
             model.load_state_dict(torch.load(opt.saved_model, map_location=device, weights_only=True), strict=False)
         else:
-            model.load_state_dict(torch.load(opt.saved_model, map_location=device, weights_only=True))
+            model.load_state_dict(torch.load(opt.saved_model, map_location=device, weights_only=True), strict=False)
     print("Model:")
     print(model)
 
@@ -284,8 +283,7 @@ if __name__ == '__main__':
     parser.add_argument('--imgH', type=int, default=32, help='the height of the input image')
     parser.add_argument('--imgW', type=int, default=100, help='the width of the input image')
     parser.add_argument('--rgb', action='store_true', help='use rgb input')
-    parser.add_argument('--character', type=str,
-                        default='0123456789!"#$%&()*+,-./:;<=>?@[\]^_`{|}~ €ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz', help='character label')
+    parser.add_argument('--character', type=str, default='0123456789!"#$%&\'()*+,-./:;<=>?@[\]^_`{|}~ €ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz', help='character label')
     parser.add_argument('--sensitive', default=False, action='store_true', help='for sensitive character mode')
     parser.add_argument('--PAD', action='store_true', help='whether to keep ratio then pad for image resize')
     parser.add_argument('--data_filtering_off', action='store_true', help='for data_filtering_off mode')
@@ -311,10 +309,10 @@ if __name__ == '__main__':
 
     os.makedirs(f'./saved_models/{opt.exp_name}', exist_ok=True)
 
-    """ vocab / character number configuration """
-    if opt.sensitive:
-        # opt.character += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-        opt.character = string.printable[:-6]  # same with ASTER setting (use 94 char).
+    # """ vocab / character number configuration """
+    # if opt.sensitive:
+    #     # opt.character += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    #     opt.character = string.printable[:-6]  # same with ASTER setting (use 94 char).
 
     """ Seed and GPU setting """
     # print("Random Seed: ", opt.manualSeed)
