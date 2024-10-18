@@ -15,7 +15,6 @@ def copy_files_and_create_labels(files, folder):
             for label in labels:
                 filename = label.split(',')[0]
                 if filename == file:
-                    print(filename, file)
                     label_file.write(label)
                     break
 
